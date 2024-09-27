@@ -5,6 +5,14 @@ void yyerror(const char *s);
 int yylex();
 %}
 
+%code_requires{
+    struct TreeNode {
+        char *data;
+        struct TreeNode* siblings;
+        struct TreeNode* children;
+    }typedef TreeNode;
+}
+
 %token AUTO ENUM RESTRICT UNSIGNED BREAK EXTERN RETURN VOID CASE FLOAT SHORT VOLATILE CHAR
 %token FOR SIGNED WHILE CONST GOTO SIZEOF BOOL CONTINUE IF STATIC COMPLEX DEFAULT
 %token INLINE STRUCT IMAGINARY DO INT SWITCH DOUBLE LONG TYPEDEF ELSE REGISTER UNION
