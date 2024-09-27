@@ -123,9 +123,9 @@ COMMENTS {MULTILINE_COMMENT}|{SINGLELINE_COMMENT}
 
 
 
-{IDENT}  { return ID; }
-{CONSTANT} { return CONST; }
-{STRING_LITERAL} { return SL; }
+{IDENT}  { yylval.str = strdup(yytext); return ID; }
+{CONSTANT} { yylval.str = strdup(yytext); return CONST; }
+{STRING_LITERAL} { yylval.str = strdup(yytext); return SL; }
 
 
 {COMMENTS} {}

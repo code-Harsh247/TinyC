@@ -15,7 +15,7 @@ void addChild(TreeNode* root, TreeNode* child){
 
 TreeNode* createNode(char* data){
     TreeNode* node = (TreeNode*)malloc(sizeof(TreeNode));
-    node->data = data;
+    node->data = strdup(data);
     node->siblings = NULL;
     node->children = NULL;
     return node;

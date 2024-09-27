@@ -1,16 +1,14 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "tinyC_22CS30028_22CS10008.h"
 void yyerror(const char *s);
 int yylex();
 %}
 
-%code_requires{
-    struct TreeNode {
-        char *data;
-        struct TreeNode* siblings;
-        struct TreeNode* children;
-    }typedef TreeNode;
+%union {
+    char* string;
+    TreeNode* node;
 }
 
 %token AUTO ENUM RESTRICT UNSIGNED BREAK EXTERN RETURN VOID CASE FLOAT SHORT VOLATILE CHAR
@@ -26,53 +24,156 @@ int yylex();
 
 %start translation_unit
 
+%type <node> primary_expression postfix_expression expression assignment_expression compound_statement block_item_list_opt
+
 %%
 
 primary_expression
-    : ID
-    | CONST
-    | SL
-    | LPAREN expression RPAREN
+    : ID    {$$ = createNode($1);}
+    | CONST {$$ = createNode($1);}
+    | SL    {$$ = createNode($1);}
+    | LPAREN expression RPAREN  {
+        $$ = createNode("primary_expression");
+        addChild($$, "(");
+        addChild($$, $2);
+        addChild($$, ")");
+    }
     ;
 
 postfix_expression
-    : primary_expression
-    | postfix_expression LBRACKET expression RBRACKET
-    | postfix_expression LPAREN argument_expression_list_opt RPAREN
-    | postfix_expression DOT ID
-    | postfix_expression ARROW ID
-    | postfix_expression INCREMENT
-    | postfix_expression DECREMENT
-    | LPAREN type_name RPAREN LBRACE initializer_list RBRACE
-    | LPAREN type_name RPAREN LBRACE initializer_list COMMA RBRACE
+    : primary_expression {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+    }
+    | postfix_expression LBRACKET expression RBRACKET {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, "[");
+        addChild($$, $3);
+        addChild($$, "]");
+    }
+    | postfix_expression LPAREN argument_expression_list_opt RPAREN {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, "(");
+        addChild($$, $3);
+        addChild($$, ")");
+    }
+    | postfix_expression DOT ID {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, ".");
+        addChild($$, $3);
+    }
+    | postfix_expression ARROW ID {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, "->");
+        addChild($$, $3);
+    }
+    | postfix_expression INCREMENT {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, "++");
+    }
+    | postfix_expression DECREMENT {
+        $$ = createNode("postfix_expression");
+        addChild($$, $1);
+        addChild($$, "--");
+    }
+    | LPAREN type_name RPAREN LBRACE initializer_list RBRACE {
+        $$ = createNode("postfix_expression");
+        addChild($$, "(");
+        addChild($$, $2);
+        addChild($$, "{");
+        addChild($$, $4);
+        addChild($$, "}");
+    }
+    | LPAREN type_name RPAREN LBRACE initializer_list COMMA RBRACE {
+        $$ = createNode("postfix_expression");
+        addChild($$, "(");
+        addChild($$, $2);
+        addChild($$, "{");
+        addChild($$, $4);
+        addChild($$, ",");
+        addChild($$, "}");
+    }
     ;
 
 argument_expression_list_opt
-    : argument_expression_list
+    : argument_expression_list {
+        $$ = createNode("argument_expression_list");
+        addChild($$, $1);
+    }
     | /* empty */
     ;
 
 argument_expression_list
-    : assignment_expression
-    | argument_expression_list COMMA assignment_expression
+    : assignment_expression {
+        $$ = createNode("argument_expression_list");
+        addChild($$, $1);
+    }
+    | argument_expression_list COMMA assignment_expression {
+        $$ = createNode("argument_expression_list");
+        addChild($$, $1);
+        addChild($$, ",");
+        addChild($$, $3);
+    }
     ;
 
-unary_expression
-    : postfix_expression
-    | INCREMENT unary_expression
-    | DECREMENT unary_expression
-    | unary_operator cast_expression
-    | SIZEOF unary_expression
-    | SIZEOF LPAREN type_name RPAREN
+unary_expression 
+    : postfix_expression {
+        $$ = createNode("unary_expression");
+        addChild($$, $1);
+    }
+    | INCREMENT unary_expression {
+        $$ = createNode("unary_expression");
+        addChild($$, "++");
+        addChild($$, $2);
+    }
+    | DECREMENT unary_expression {
+        $$ = createNode("unary_expression");
+        addChild($$, "--");
+        addChild($$, $2);
+    }
+    | unary_operator cast_expression {
+        $$ = createNode("unary_expression");
+        addChild($$, $1);
+        addChild($$, $2);
+    }
+    | SIZEOF unary_expression {
+        $$ = createNode("unary_expression");
+        addChild($$, "sizeof");
+        addChild($$, $2);
+    }
+    | SIZEOF LPAREN type_name RPAREN {
+        $$ = createNode("unary_expression");
+        addChild($$, "sizeof");
+        addChild($$, "(");
+        addChild($$, $3);
+        addChild($$, ")");
+    }
     ;
 
 unary_operator
-    : AMPERSAND
-    | ASTERISK
-    | PLUS
-    | MINUS
-    | TILDE
-    | BANG
+    : AMPERSAND {
+        $$ = createNode("&");
+    }
+    | ASTERISK {
+        $$ = createNode("*");
+    }
+    | PLUS {
+        $$ = createNode("+");
+    }
+    | MINUS {
+        $$ = createNode("-");
+    }
+    | TILDE {
+        $$ = createNode("~");
+    }
+    | BANG {
+        $$ = createNode("!");
+    }
     ;
 
 cast_expression
