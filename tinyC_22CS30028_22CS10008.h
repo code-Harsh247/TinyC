@@ -4,28 +4,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lex.yy.c"
-#include "y.tab.c"
+// #include "lex.yy.c"
+// #include "y.tab.c"
 
 
-//structure for Token
-typedef struct {
-    int entry_num;
-    char token_type[255];
-    char lexeme[255];
-} Token;
+struct TreeNode {
+    char *data;
+    struct TreeNode* siblings;
+    struct TreeNode* children;
+}typedef TreeNode;
 
-//structure for symbol table node
-typedef struct symbol_Table {
-    Token *token;
-    struct symbol_Table *next;
-} symbol_Table;
+void addChild(TreeNode* root, TreeNode* child);
+TreeNode* createNode(char* data);
+void printTree(TreeNode* root, int level);
+void printChildren(TreeNode* head, int level);
+void printSpaces(int level);
+void printNode(TreeNode* node, int level);
+void freeTree(TreeNode* root);
 
-
-// Function prototypes
-Token *create_token(int token_type, const char *lexeme);
-symbol_Table *addToken(symbol_Table *table, Token *token);
-void freeTable(symbol_Table *table);
 
 
 #endif 
