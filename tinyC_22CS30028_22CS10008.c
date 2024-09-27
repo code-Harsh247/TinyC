@@ -1,7 +1,8 @@
 #include "tinyC_22CS30028_22CS10008.h"
 
 
-void addChild(TreeNode* root, TreeNode* child){
+void addChild(TreeNode* root, char*data){
+    TreeNode* child = createNode(data);
     if(root->children == NULL){
         root->children = child;
     }else{
