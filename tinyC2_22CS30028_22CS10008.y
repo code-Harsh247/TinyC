@@ -50,9 +50,18 @@ int yylex();
 %%
 
 primary_expression
-    : ID    {$$ = createNode($1);}
-    | CONSTANT {$$ = createNode($1);}
-    | SL    {$$ = createNode($1);}
+    : ID    {
+        $$ = createNode("primary_expression");
+        addChild($$, createNode($1));
+    }
+    | CONSTANT {
+        $$ = createNode("primary_expression");
+        addChild($$, createNode($1));
+    }
+    | SL    {
+        $$ = createNode("primary_expression");
+        addChild($$, createNode($1));
+    }
     | LPAREN expression RPAREN  {
         $$ = createNode("primary_expression");
         addChild($$, createNode("("));
