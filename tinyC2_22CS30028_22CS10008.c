@@ -34,7 +34,7 @@ void printTree(TreeNode* root, int level){
 
 void printSpaces(int level){
     for(int i=0; i<level; i++){
-        printf("      ");
+        printf("   ");
     }
 }
 
