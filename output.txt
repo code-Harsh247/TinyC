@@ -1,6 +1,0 @@
--->translation_unit
-        -->external_declaration
-                -->declaration
-                        -->declaration_specifiers
-                                -->static
-                        -->;

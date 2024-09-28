@@ -4,21 +4,15 @@ BISON_FILE = tinyC2_22CS30028_22CS10008.y
 BISON_OUTPUT = tinyC2_22CS30028_22CS10008.tab.c
 LEX_OUTPUT = lex.yy.c
 EXE = ./a.out
-INPUT = tinyC2_22CS30028_22CS10008_test.c
+INPUT = tinyC2_22CS30028_22CS10008_test.txt
 OUTPUT_FILE = output.txt
 
-all: clean compile run post_clean
-
-clean:
-	rm -f $(LEX_OUTPUT) $(EXE)
-
-compile: $(LEX_FILE) $(C_FILE) $(BISON_FILE)
+all: 
+	rm -f $(LEX_OUTPUT) $(EXE) $(BISON_OUTPUT) $(OUTPUT_FILE)
 	bison -d $(BISON_FILE)
 	flex $(LEX_FILE)
 	gcc $(C_FILE) $(LEX_OUTPUT) $(BISON_OUTPUT)
-
-run: $(EXE)
-	./$(EXE) < $(INPUT) > $(OUTPUT_FILE)
+	$(EXE) < $(INPUT) > $(OUTPUT_FILE)
 
 post_clean:
-	rm -f $(LEX_OUTPUT) $(EXE)
+	rm -f $(LEX_OUTPUT) $(EXE) $(BISON_OUTPUT) $(OUTPUT_FILE)
