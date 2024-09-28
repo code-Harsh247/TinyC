@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        ".env*": "dotenv",
+        "tinyc_22cs30028_22cs10008.h": "c"
+    }
+}
